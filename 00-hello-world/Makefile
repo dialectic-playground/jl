@@ -21,17 +21,64 @@ TOOLS   := dp-hello
 # Path to the sdlc-curriculum checkout (the specs, test suites, and runner live there).
 CURRICULUM_ROOT ?= ../sdlc-curriculum
 
-# Directory that contains the built executables after `make all`, e.g. build/bin.
-BIN_DIR :=
+# Julia (dialectic-playground/jl). Package DpHello: Project.toml, src/, test/ (unit tests),
+# dev/ (JuliaFormatter and Aqua); one workspace Manifest.toml locks all three environments.
+# The tool itself needs only Base: the launcher bin/dp-hello includes src/DpHello.jl.
+JULIA ?= julia
+JL := $(JULIA) --startup-file=no
+INSTANTIATE := $(JL) --project=. -e 'using Pkg; Pkg.instantiate(workspace=true)'
+LAUNCHER_SHEBANG := \#!/usr/bin/env -S julia --startup-file=no --compile=min -O0
+INSTALL_DIR = $(LIBDIR)/jl/$(PROJECT)
 
-# Language-specific commands. Use $(TOOLS), $(EXE), $(PREFIX), and $(BINDIR) as needed.
-DP_BUILD     =
-DP_INSTALL   =
-DP_UNINSTALL =
-DP_UNIT_TEST =
-DP_LINT      =
-DP_FORMAT    =
-DP_CLEAN     =
-DP_DISTCLEAN =
+# Directory that contains the built executables after `make all`: the #! launcher dp-hello.
+BIN_DIR := bin
+
+define DP_BUILD
+	chmod +x bin/dp-hello
+	$(INSTANTIATE)
+	$(JL) --project=. -e 'using Pkg; Pkg.precompile()'
+endef
+
+define DP_INSTALL
+	mkdir -p "$(INSTALL_DIR)/src" "$(BINDIR)"
+	cp src/*.jl "$(INSTALL_DIR)/src/"
+	printf '%s\n# dp-hello launcher written by make install (dialectic-playground/jl).\ninclude(raw"%s")\nexit(DpHello.main(ARGS))\n' \
+		'$(LAUNCHER_SHEBANG)' "$(INSTALL_DIR)/src/DpHello.jl" > "$(BINDIR)/dp-hello"
+	chmod +x "$(BINDIR)/dp-hello"
+endef
+
+define DP_UNINSTALL
+	rm -f "$(BINDIR)/dp-hello"
+	rm -rf "$(INSTALL_DIR)"
+	rmdir "$(LIBDIR)/jl" 2>/dev/null || true
+endef
+
+define DP_UNIT_TEST
+	$(INSTANTIATE)
+	$(JL) --project=test test/runtests.jl
+endef
+
+define DP_LINT
+	$(INSTANTIATE)
+	$(JL) --project=dev dev/style.jl lint
+endef
+
+define DP_FORMAT
+	$(INSTANTIATE)
+	$(JL) --project=dev dev/style.jl format
+endef
+
+# Julia keeps compiled caches in the depot (JULIA_DEPOT_PATH), not in the project: remove
+# DpHello's precompiled images there. Nothing else is generated inside this directory.
+define DP_CLEAN
+	$(JL) -e 'foreach(d -> rm(joinpath(d, "compiled", "v$$(VERSION.major).$$(VERSION.minor)", "DpHello"); force = true, recursive = true), DEPOT_PATH)'
+endef
+
+# Registries and packages live in the depot (JULIA_DEPOT_PATH), outside the project. A
+# depot can appear here only when Julia runs without HOME/JULIA_DEPOT_PATH while the project
+# is the home directory (podman --userns=keep-id); remove it.
+define DP_DISTCLEAN
+	rm -rf .julia
+endef
 
 include $(CURRICULUM_ROOT)/shared/templates/BASE-MAKEFILE

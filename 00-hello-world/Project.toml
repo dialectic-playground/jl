@@ -1,0 +1,10 @@
+name = "DpHello"
+uuid = "dd6ad29c-14a0-4e03-9aeb-3203c54ee5e7"
+version = "1.0.0"
+authors = ["dialectic-playground contributors"]
+
+[compat]
+julia = "1.13"
+
+[workspace]
+projects = ["test", "dev"]

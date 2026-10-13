@@ -13,7 +13,7 @@
 
 # Project directories whose implementation is complete enough to build and test, in
 # curriculum order (for example: 00-hello-world 01-echo). CI covers exactly these.
-IMPLEMENTED :=
+IMPLEMENTED := 00-hello-world
 
 DP_HOST_GOALS += help roundtrip
 include tools/container.mk

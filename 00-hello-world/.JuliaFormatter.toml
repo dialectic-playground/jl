@@ -1,0 +1,3 @@
+# JuliaFormatter configuration (`make format`, checked by `make lint`).
+style = "blue"
+margin = 96

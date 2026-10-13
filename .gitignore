@@ -10,3 +10,11 @@ __pycache__/
 *.swp
 .DS_Store
 Thumbs.db
+
+# Repository-specific (Julia): coverage and allocation output, local preferences.
+# Packages and precompiled caches live in the depot (JULIA_DEPOT_PATH), outside the tree.
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+LocalPreferences.toml
+.julia/

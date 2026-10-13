@@ -1,5 +1,5 @@
-# Keeps GitHub Actions (SHA-pinned) and the toolchain image digest current.
-# Package ecosystems (Pkg) are added when the first project's manifests exist.
+# Keeps GitHub Actions (SHA-pinned), the toolchain image digest,
+# and the Julia packages (Pkg) of each implemented project.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -23,3 +23,11 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major", "version-update:semver-minor"]
+
+  # Julia packages of 00-hello-world (workspace Project.toml files and Manifest.toml).
+  - package-ecosystem: julia
+    directory: /00-hello-world
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
