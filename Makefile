@@ -54,7 +54,7 @@ toolchain:
 	python3 --version || python --version
 	make --version | head -1
 	@version="$$(julia --version)"; echo "$$version"; echo "$$version" | grep -q 'version 1\.13\.' \
-		|| { echo "toolchain: expected a version matching version 1\.13\." >&2; exit 1; }
+		|| { echo 'toolchain: expected a version matching version 1\.13\.' >&2; exit 1; }
 
 projects:
 	@[ -n "$(strip $(IMPLEMENTED))" ] || echo "projects: none implemented yet (IMPLEMENTED is empty)"
