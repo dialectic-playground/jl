@@ -67,6 +67,11 @@ jobs:
         if: runner.os == 'Windows'
         run: command -v make || choco install make --no-progress -y
 
+      # macOS ships GNU Make 3.81; BASE-MAKEFILE requires >= 3.82.
+      - name: Use current GNU Make (macOS)
+        if: runner.os == 'macOS'
+        run: brew install make && echo "$(brew --prefix make)/libexec/gnubin" >> "$GITHUB_PATH"
+
       - name: Set up Julia 1.13
         uses: julia-actions/setup-julia@fa02766e078afaaf09b14210362cee14137e6a32 # v3.0.2
         with:
