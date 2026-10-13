@@ -1,0 +1,6 @@
+#!/usr/bin/env -S julia --startup-file=no --compile=min -O0
+# dp-hello launcher for the source tree (BIN_DIR). It loads the sources relative to its own
+# location, so it needs no Julia project, depot, or environment variable. `make install`
+# writes an equivalent launcher with the installed payload's absolute path baked in.
+include(joinpath(@__DIR__, "..", "src", "DpHello.jl"))
+exit(DpHello.main(ARGS))

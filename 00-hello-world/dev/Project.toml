@@ -1,0 +1,4 @@
+[deps]
+Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+DpHello = "dd6ad29c-14a0-4e03-9aeb-3203c54ee5e7"
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"

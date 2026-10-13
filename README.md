@@ -16,7 +16,7 @@ This repository implements the eleven projects of the
 specified to the byte by the curriculum and verified by its black-box tests on Linux, macOS,
 and Windows.
 
-**Status:** repository and toolchain ready; no projects implemented yet.
+**Status:** Implemented projects: 00-hello-world.
 
 ## Julia at a glance
 
@@ -38,6 +38,29 @@ and Windows.
 | Native CI | julia-actions/setup-julia (1.13) |
 
 `make toolchain` verifies that the container and native toolchains are on this release line.
+
+### Project tooling
+
+| Purpose | Tool | Where |
+| :-- | :-- | :-- |
+| Unit tests | `Test` (standard library) | `<project>/test/runtests.jl`, run by `make test` |
+| Format | [JuliaFormatter](https://github.com/domluna/JuliaFormatter.jl) (Blue style, `.JuliaFormatter.toml`) | `make format`; `make lint` fails on unformatted files |
+| Static checks | [Aqua](https://github.com/JuliaTesting/Aqua.jl) (`Aqua.test_all`) | `make lint` |
+
+Each project is a Julia package (`Project.toml`, `src/`, `test/`) and a Pkg workspace with two
+member environments, `test/` and `dev/` (JuliaFormatter, Aqua). A single committed
+`Manifest.toml` locks all of them, so the container and the native CI use the same versions;
+Dependabot (`julia` ecosystem) proposes updates. Packages and precompiled caches live in the
+Julia depot (`JULIA_DEPOT_PATH`, `/dp-cache/julia` in the container), never in the project
+directory. No extra system packages are needed: `make` installs the Julia packages with Pkg.
+
+Each tool is an extensionless launcher script in the project's `bin/` whose first line is
+`#!/usr/bin/env -S julia --startup-file=no --compile=min -O0`. It includes the package sources
+relative to its own location, so it runs without a project, depot, or environment variable;
+`--compile=min -O0` keeps start-up short. `make install` copies the sources to
+`$(LIBDIR)/jl/<project>/` and writes a launcher with that absolute path to `$(BINDIR)`.
+**Windows:** run the tools from Git Bash or MSYS2, which honor `#!` lines (the black-box runner
+starts the interpreter itself).
 
 ## Layout
 
