@@ -1,3 +1,20 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+**Table of Contents** _generated with [DocToc](https://github.com/thlorenz/doctoc)_
+
+- [jl](#jl)
+  - [Julia at a glance](#julia-at-a-glance)
+  - [Toolchain](#toolchain)
+    - [Project tooling](#project-tooling)
+  - [Layout](#layout)
+  - [Development](#development)
+  - [Implementing a project](#implementing-a-project)
+  - [Contributing](#contributing)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/dialectic-playground/.github/main/assets/jl/dist/logo-dark.svg">
@@ -11,7 +28,7 @@ Julia implementation of the Dialectic Playground SDLC curriculum.
 
 📖 **Documentation:** <https://dialectic-playground.github.io/docs/reference/languages/jl/>
 
-This repository implements the eleven projects of the
+This repository implements the fifty-three projects of the
 [SDLC curriculum](https://github.com/dialectic-playground/sdlc-curriculum) in Julia. Each project is
 specified to the byte by the curriculum and verified by its black-box tests on Linux, macOS,
 and Windows.
@@ -20,32 +37,32 @@ and Windows.
 
 ## Julia at a glance
 
-| Aspect | Julia |
-| :-- | :-- |
-| File extension | `.jl` |
-| CLI classification | Included |
-| Image category | First-Class |
-| Access to OS primitives | High (explicit process wrappers) |
-| Entry-point mechanism | Runtime targets calculations but populates global ARGS vector |
+| Aspect                  | Julia                                                         |
+| :---------------------- | :------------------------------------------------------------ |
+| File extension          | `.jl`                                                         |
+| CLI classification      | Included                                                      |
+| Image category          | First-Class                                                   |
+| Access to OS primitives | High (explicit process wrappers)                              |
+| Entry-point mechanism   | Runtime targets calculations but populates global ARGS vector |
 
 ## Toolchain
 
-| | |
-| :-- | :-- |
-| Release line | Julia 1.13 |
-| Build / package tool | Pkg |
-| Container image | `julia:1.13-trixie`, pinned by digest ([`Containerfile`](Containerfile)) |
-| Native CI | julia-actions/setup-julia (1.13) |
+|                      |                                                                          |
+| :------------------- | :----------------------------------------------------------------------- |
+| Release line         | Julia 1.13                                                               |
+| Build / package tool | Pkg                                                                      |
+| Container image      | `julia:1.13-trixie`, pinned by digest ([`Containerfile`](Containerfile)) |
+| Native CI            | julia-actions/setup-julia (1.13)                                         |
 
 `make toolchain` verifies that the container and native toolchains are on this release line.
 
 ### Project tooling
 
-| Purpose | Tool | Where |
-| :-- | :-- | :-- |
-| Unit tests | `Test` (standard library) | `<project>/test/runtests.jl`, run by `make test` |
-| Format | [JuliaFormatter](https://github.com/domluna/JuliaFormatter.jl) (Blue style, `.JuliaFormatter.toml`) | `make format`; `make lint` fails on unformatted files |
-| Static checks | [Aqua](https://github.com/JuliaTesting/Aqua.jl) (`Aqua.test_all`) | `make lint` |
+| Purpose       | Tool                                                                                                | Where                                                 |
+| :------------ | :-------------------------------------------------------------------------------------------------- | :---------------------------------------------------- |
+| Unit tests    | `Test` (standard library)                                                                           | `<project>/test/runtests.jl`, run by `make test`      |
+| Format        | [JuliaFormatter](https://github.com/domluna/JuliaFormatter.jl) (Blue style, `.JuliaFormatter.toml`) | `make format`; `make lint` fails on unformatted files |
+| Static checks | [Aqua](https://github.com/JuliaTesting/Aqua.jl) (`Aqua.test_all`)                                   | `make lint`                                           |
 
 Each project is a Julia package (`Project.toml`, `src/`, `test/`) and a Pkg workspace with two
 member environments, `test/` and `dev/` (JuliaFormatter, Aqua). A single committed
@@ -64,14 +81,14 @@ starts the interpreter itself).
 
 ## Layout
 
-| Path | Contents |
-| :--- | :--- |
-| `00-hello-world/` … `10-sys-monitor/` | One workspace per curriculum project: `Makefile` (with `DP_*` hooks), HLD, LLD, RTM, master test plan, and `src/` |
-| `sdlc-curriculum/` | The curriculum, as a git submodule pinned to a release tag |
-| `Makefile` | `make check` (repository, toolchain, implemented projects), `toolchain`, `projects`, `roundtrip` |
-| `Containerfile`, `.devcontainer/` | The toolchain image and the matching dev container |
-| `tools/dp-run`, `tools/container.mk` | Shared container tooling (copies of the canonical files in `dialectic-playground/.github`) |
-| `.github/workflows/ci.yml` | CI: container and native (Linux, macOS, Windows) `make` targets, shared-tooling check, DCO |
+| Path                                 | Contents                                                                                                          |
+| :----------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
+| `00-hello-world/` … `52-spacecraft/` | One workspace per curriculum project: `Makefile` (with `DP_*` hooks), HLD, LLD, RTM, master test plan, and `src/` |
+| `sdlc-curriculum/`                   | The curriculum, as a git submodule pinned to a release tag                                                        |
+| `Makefile`                           | `make check` (repository, toolchain, implemented projects), `toolchain`, `projects`, `roundtrip`                  |
+| `Containerfile`, `.devcontainer/`    | The toolchain image and the matching dev container                                                                |
+| `tools/dp-run`, `tools/container.mk` | Shared container tooling (copies of the canonical files in `dialectic-playground/.github`)                        |
+| `.github/workflows/ci.yml`           | CI: container and native (Linux, macOS, Windows) `make` targets, shared-tooling check, DCO                        |
 
 ## Development
 
