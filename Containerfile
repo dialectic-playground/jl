@@ -6,6 +6,9 @@
 # release line is a deliberate change (keep `make toolchain` and the native CI in step).
 FROM docker.io/library/julia:1.13-trixie@sha256:0002771531bbae894f2532a5ae02ea71c30685440ca3bdaea0a43d17e65571e0
 
+# Debian keeps only the current version of each package, so apt versions cannot be pinned
+# reproducibly; the base image is pinned by digest instead.
+# hadolint ignore=DL3008
 RUN apt-get update \
     && apt-get install -y --no-install-recommends make python3 \
     && rm -rf /var/lib/apt/lists/*
