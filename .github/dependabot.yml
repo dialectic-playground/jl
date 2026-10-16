@@ -22,7 +22,8 @@ updates:
     # `make toolchain`; Dependabot refreshes digests but never changes minor or major versions.
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+        update-types:
+          ["version-update:semver-major", "version-update:semver-minor"]
 
   # Julia packages of 00-hello-world (workspace Project.toml files and Manifest.toml).
   - package-ecosystem: julia
